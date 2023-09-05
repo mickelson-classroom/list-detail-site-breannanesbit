@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ListItem, { ListItemProps, movies } from './ListItem';
 import { Selected } from './Selected';
 import { Filter } from './Filter';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const List: React.FC = () => {
   const [newItemTitle, setNewItemTitle] = useState<string>('');
@@ -50,33 +52,48 @@ const List: React.FC = () => {
           <div>{selectedMovie.description}</div>
         </div>
       )}
-      {filteredItems.map((i, index) => (
-        <Selected
+
+      <div className='container text-center'>
+        {filteredItems.map((i, index) => (
+          <Selected
           onClick={(m) => setSelectedMovie(m)}
           key={i.title}
           item={i}
           onDelete={() => handleDeleteItem(index)}
-        />
-      ))}
-
-      <div>
-        <label htmlFor='title'>Title:</label>
-      <input
-        type="text"
-        id='title'
-        value={newItemTitle}
-        onChange={(e) => setNewItemTitle(e.target.value)}
-        />
-        <label htmlFor='des'>Description:</label>
-      <input
-        type="text"
-        id='des'
-        value={newItemDes}
-        onChange={(e) => setNewItemDes(e.target.value)}
-        />
-
-      <button onClick={() => handleAddItem()}>Add Item</button>
+          />
+          ))}
+      </div>
+      <div className="container">
+        <div className="row g-3 align-items-center">
+          <div className="col-md-2">
+            <label htmlFor="title" className="col-form-label">Title:</label>
+          </div>
+          <div className="col-md-3">
+            <input
+              className="form-control"
+              type="text"
+              id="title"
+              value={newItemTitle}
+              onChange={(e) => setNewItemTitle(e.target.value)}
+            />
+          </div>
+          <div className="col-md-2">
+            <label htmlFor="des" className="col-form-label">Description:</label>
+          </div>
+          <div className="col-md-3">
+            <input
+              className="form-control"
+              type="text"
+              id="des"
+              value={newItemDes}
+              onChange={(e) => setNewItemDes(e.target.value)}
+            />
+          </div>
+          <div className="col-12 col-md-2 mt-2">
+            <button className="btn btn-primary" onClick={() => handleAddItem()}>Add Item</button>
+          </div>
         </div>
+      </div>
     </div>
   );
 };
