@@ -14,16 +14,30 @@ const List: React.FC = () => {
   const [ClickCount, setClickCount] = useState<number>(1);
   const [filteredItems, setFilteredItems] = useState<ListItemProps[]>(movies);
 
+  const [movie, setMovies] = useState<ListItemProps[]>(/* ... */);
+
+  const updateRating = (movieTitle: string, newRating: number) => {
+    const updatedMovies = filteredItems.map((movie) => {
+      if (movie.title === movieTitle) {
+        return {
+          ...movie,
+          Ratings: [...movie.Ratings, newRating],
+        };
+      }
+      return movie;
+    });
+    setFilteredItems(updatedMovies)
+  };
+
   const handleAddItem = () => {
     const newItem: ListItemProps = {
       title: newItemTitle,
       description: newItemDes,
+      Ratings: []
     };
     
-    // Update the items state
     setItems([...items, newItem]);
 
-    // Clear the input values
     setNewItemTitle('');
     setNewItemDes('');
   };
@@ -43,7 +57,7 @@ const List: React.FC = () => {
 
   return (
     <div>
-      <h2>List</h2>
+      <h2>Movies</h2>
       <Filter onChange={(filter) => setFilter(filter)} />
 
       {selectedMovie && (
@@ -53,13 +67,15 @@ const List: React.FC = () => {
         </div>
       )}
 
-      <div className='container text-center'>
+      <div className='row justify-content-center'>
         {filteredItems.map((i, index) => (
           <Selected
+          onUpdateRating={(t,r) => updateRating(t,r)}
           onClick={(m) => setSelectedMovie(m)}
           key={i.title}
           item={i}
           onDelete={() => handleDeleteItem(index)}
+          index={index}
           />
           ))}
       </div>
