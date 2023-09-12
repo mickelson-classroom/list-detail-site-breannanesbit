@@ -36,7 +36,7 @@ export const Selected: FC<{
               </li>
             ))}
           </ul>
-          <button className="btn btn-primary" onClick={onDelete}>Delete</button>
+          <button className="btn btn-secondary" onClick={onDelete}>Delete</button>
         </div>
       </div>
 

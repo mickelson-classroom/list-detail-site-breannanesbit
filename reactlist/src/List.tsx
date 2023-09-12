@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import ListItem, { ListItemProps, movies } from './ListItem';
 import { Selected } from './Selected';
 import { Filter } from './Filter';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { EditForm } from './EditForm';
 
 
 const List: React.FC = () => {
@@ -30,8 +31,10 @@ const List: React.FC = () => {
     setFilteredItems(updatedMovies)
   };
 
+
   const handleAddItem = () => {
     const newItem: ListItemProps = {
+      id: 3,
       title: newItemTitle,
       description: newItemDes,
 
@@ -57,17 +60,25 @@ const List: React.FC = () => {
     setFilteredItems(filteredItems);
   }, [items, filter]);
 
+  const updateMovie = (newMovie: ListItemProps) => {
+    setFilteredItems((oldMovies) =>
+      oldMovies.map((m => m.id === newMovie.id ? newMovie : m)))
+  }
+
+  const updateMovieAndItems = (newMovie: ListItemProps) => {
+    // Update the selectedMovie state
+    setSelectedMovie(newMovie);
+
+    // Update the items list
+    setItems((oldMovies) =>
+      oldMovies.map((m) => (m.id === newMovie.id ? newMovie : m))
+    );
+  };
+
   return (
     <div>
       <h2>Movies</h2>
       <Filter onChange={(filter) => setFilter(filter)} />
-
-      {selectedMovie && (
-        <div>
-          <div>{selectedMovie.title}</div>
-          <div>{selectedMovie.description}</div>
-        </div>
-      )}
 
       <div className='row justify-content-center'>
         {filteredItems.map((i, index) => (
@@ -82,81 +93,98 @@ const List: React.FC = () => {
         ))}
       </div>
       <div className="container">
-        <div className="row g-3 align-items-center">
-          <div className="col-md-2">
-            <label htmlFor="title" className="col-form-label">Title:</label>
+        <div className="row g-3 align-items-center ">
+          {selectedMovie && (
+            <div className='border border-4 rounded-5 p-3 bg-dark-subtle"'>
+              <h3>{selectedMovie.title}</h3>
+              <h6>{selectedMovie.description}</h6>
+
+              <EditForm
+                key={selectedMovie.id}
+                selectedMovie={selectedMovie}
+                updateMovie={(newMovie) => updateMovieAndItems(newMovie)} />
+            </div>
+          )}
+
+          <div className='border border-4 rounded-5 p-3 bg-dark-subtle"'>
+            <h3>Add New Movie</h3>
+            <form onSubmit={handleAddItem}>
+              <div className='row'>
+
+                <div className="col-md-3 col-lg-4">
+                  <label htmlFor="title" className="col-form-label">Title:</label>
+                  <input
+                    name='title'
+                    aria-describedby="titleinput"
+                    className="form-control is-invalid"
+                    type="text"
+                    id="title"
+                    required
+                    value={newItemTitle}
+                    onChange={(e) => setNewItemTitle(e.target.value)}
+                  />
+                  <div id='titleinput' className='invalid-feedback'>
+                    You must provide a Title
+                  </div>
+                </div>
+                <div className="col-md-3 col-lg-4">
+                  <label htmlFor="des" className="col-form-label">Description:</label>
+                  <input
+                    name='des'
+                    aria-describedby="desinput"
+                    className={`form-control ${newItemDes === "" ? "is-invalid" : ""}`}
+                    type="text"
+                    id="des"
+                    required
+                    value={newItemDes}
+                    onChange={(e) => setNewItemDes(e.target.value)}
+                  />
+                  <div className='invalid-feedback'>
+                    You must give a description
+                  </div>
+
+                </div>
+                <div className="col-md-3 col-lg-4">
+                  <label htmlFor="year" className="col-form-label">Year:</label>
+                  <input
+                    name='year'
+                    aria-describedby="desinput"
+                    className="form-control is-invalid"
+                    type="text"
+                    id="year"
+                    required
+                    value={newItemYear}
+                    onChange={(e) => setNewItemYear(parseFloat(e.target.value))}
+                  />
+                  <div className='invalid-feedback'>
+                    You must give a description
+                  </div>
+
+                  {/* <div className="col-md-3">
+                  <input
+                  className="form-control is-invalid"
+                  type="text"
+                  id="title"
+                  required
+                  value={newItemTitle}
+                  onChange={(e) => setNewItemTitle(e.target.value)}
+                  />
+                  <div id='titleinput' className='invalid-feedback'>
+                  You must provide a Title
+                  </div>
+                </div> */}
+
+                </div>
+                <div className="col-12 col-md-2 mt-2">
+                  <button className="btn btn-primary" type="submit">
+                    Add Item
+                  </button>
+
+                </div>
+              </div>
+            </form>
           </div>
-          <form onSubmit={handleAddItem}>
-            <div className="col-md-3">
-              <input
-                aria-describedby="titleinput"
-                className="form-control is-invalid"
-                type="text"
-                id="title"
-                required
-                value={newItemTitle}
-                onChange={(e) => setNewItemTitle(e.target.value)}
-              />
-              <div id='titleinput' className='invalid-feedback'>
-                You must provide a Title
-              </div>
-            </div>
-            <div className="col-md-2">
-              <label htmlFor="des" className="col-form-label">Description:</label>
-            </div>
-            <div className="col-md-3">
-              <input
-                aria-describedby="desinput"
-                className={`form-control ${newItemDes === "" ? "is-invalid" : ""}`}
-                type="text"
-                id="des"
-                required
-                value={newItemDes}
-                onChange={(e) => setNewItemDes(e.target.value)}
-              />
-              <div className='invalid-feedback'>
-                You must give a description
-              </div>
 
-            </div>
-            <div className="col-md-3">
-              <div className="col-md-2">
-              <label htmlFor="des" className="col-form-label">Year:</label></div>
-              <input
-                aria-describedby="desinput"
-                className="form-control is-invalid"
-                type="text"
-                id="year"
-                required
-                value={newItemYear}
-                onChange={(e) => setNewItemYear(parseFloat(e.target.value))}
-              />
-              <div className='invalid-feedback'>
-                You must give a description
-              </div>
-
-              <div className="col-md-3">
-              <input
-                className="form-control is-invalid"
-                type="text"
-                id="title"
-                required
-                value={newItemTitle}
-                onChange={(e) => setNewItemTitle(e.target.value)}
-              />
-              <div id='titleinput' className='invalid-feedback'>
-                You must provide a Title
-              </div>
-            </div>
-
-            </div>
-            <div className="col-12 col-md-2 mt-2">
-              <button className="btn btn-primary" type="submit">
-                Add Item
-              </button>
-
-            </div>
-          </form>
         </div>
       </div>
     </div>
