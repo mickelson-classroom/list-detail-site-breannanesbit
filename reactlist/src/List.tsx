@@ -4,6 +4,7 @@ import { Selected } from './Selected';
 import { Filter } from './Filter';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { EditForm } from './EditForm';
+import { GenericTextInput } from './GenericInput';
 
 
 const List: React.FC = () => {
@@ -32,16 +33,15 @@ const List: React.FC = () => {
   };
 
 
-  const handleAddItem = () => {
+  const handleAddItem = (e: FormEvent) => {
     const newItem: ListItemProps = {
-      id: 3,
+      id: items.length + 1,
       title: newItemTitle,
       description: newItemDes,
-
       Ratings: []
     };
 
-    setItems([...items, newItem]);
+    setItems((perItem) => [...perItem, newItem]);
 
     setNewItemTitle('');
     setNewItemDes('');
@@ -112,67 +112,38 @@ const List: React.FC = () => {
               <div className='row'>
 
                 <div className="col-md-3 col-lg-4">
-                  <label htmlFor="title" className="col-form-label">Title:</label>
-                  <input
-                    name='title'
-                    aria-describedby="titleinput"
-                    className="form-control is-invalid"
-                    type="text"
-                    id="title"
-                    required
-                    value={newItemTitle}
-                    onChange={(e) => setNewItemTitle(e.target.value)}
-                  />
-                  <div id='titleinput' className='invalid-feedback'>
-                    You must provide a Title
-                  </div>
+                  <GenericTextInput GI={{
+                    id: 9,
+                    name: "desTitle",
+                    label: "Title",
+                    value: `${newItemTitle}`,
+                    isValid: true,
+                    validationText: "Thank you for providing a Title",
+                    onChange: (t) => setNewItemTitle(t)
+                  }} />
                 </div>
                 <div className="col-md-3 col-lg-4">
-                  <label htmlFor="des" className="col-form-label">Description:</label>
-                  <input
-                    name='des'
-                    aria-describedby="desinput"
-                    className={`form-control ${newItemDes === "" ? "is-invalid" : ""}`}
-                    type="text"
-                    id="des"
-                    required
-                    value={newItemDes}
-                    onChange={(e) => setNewItemDes(e.target.value)}
-                  />
-                  <div className='invalid-feedback'>
-                    You must give a description
-                  </div>
+                  <GenericTextInput GI={{
+                    id: 10,
+                    name: "des",
+                    label: "Description",
+                    value: `${newItemDes}`,
+                    isValid: true,
+                    validationText: "Thank you for providing a Description",
+                    onChange: (t) => setNewItemDes(t)
+                  }} />
 
                 </div>
                 <div className="col-md-3 col-lg-4">
-                  <label htmlFor="year" className="col-form-label">Year:</label>
-                  <input
-                    name='year'
-                    aria-describedby="desinput"
-                    className="form-control is-invalid"
-                    type="text"
-                    id="year"
-                    required
-                    value={newItemYear}
-                    onChange={(e) => setNewItemYear(parseFloat(e.target.value))}
-                  />
-                  <div className='invalid-feedback'>
-                    You must give a description
-                  </div>
-
-                  {/* <div className="col-md-3">
-                  <input
-                  className="form-control is-invalid"
-                  type="text"
-                  id="title"
-                  required
-                  value={newItemTitle}
-                  onChange={(e) => setNewItemTitle(e.target.value)}
-                  />
-                  <div id='titleinput' className='invalid-feedback'>
-                  You must provide a Title
-                  </div>
-                </div> */}
+                 <GenericTextInput GI={{
+                    id: 9,
+                    name: "desYear",
+                    label: "Year",
+                    value: `${newItemYear}`,
+                    isValid: false,
+                    validationText: "Indvalid entry",
+                    onChange: (t) => setNewItemYear(parseFloat(t))
+                  }} /> 
 
                 </div>
                 <div className="col-12 col-md-2 mt-2">
