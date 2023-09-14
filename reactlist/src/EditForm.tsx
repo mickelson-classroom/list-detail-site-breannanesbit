@@ -1,7 +1,6 @@
 import { FC, FormEvent, useState } from "react";
 import { ListItemProps } from "./ListItem"
 import { GenericTextInput } from "./GenericInput";
-import { Value } from "sass";
 
 export const EditForm: FC<{
     selectedMovie: ListItemProps;
