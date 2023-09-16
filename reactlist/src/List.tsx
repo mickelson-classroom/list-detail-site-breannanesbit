@@ -5,12 +5,13 @@ import { Filter } from './Filter';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { EditForm } from './EditForm';
 import { GenericTextInput } from './GenericInput';
+import { GenericSelectInput } from './InputForm';
 
 
 const List: React.FC = () => {
   const [newItemTitle, setNewItemTitle] = useState<string>('');
   const [newItemDes, setNewItemDes] = useState<string>('');
-  const [newItemYear, setNewItemYear] = useState<number>();
+  const [genre, setGenre] = useState<string>('');
   const [items, setItems] = useState<ListItemProps[]>(movies);
   const [selectedMovie, setSelectedMovie] = useState<ListItemProps | undefined>();
   const [filter, setFilter] = useState<string>('');
@@ -38,10 +39,12 @@ const List: React.FC = () => {
       id: items.length + 1,
       title: newItemTitle,
       description: newItemDes,
+      genre: genre,
+      liked: "Yes",
       Ratings: []
     };
 
-    setItems((perItem) => [...perItem, newItem]);
+    setFilteredItems((perItem) => [...perItem, newItem]);
 
     setNewItemTitle('');
     setNewItemDes('');
@@ -98,6 +101,11 @@ const List: React.FC = () => {
             <div className='border border-4 rounded-5 p-3 bg-dark-subtle"'>
               <h3>{selectedMovie.title}</h3>
               <h6>{selectedMovie.description}</h6>
+              <h6>{selectedMovie.genre}</h6>
+              <div>
+              <h6>Liked:</h6>
+              <h6>{selectedMovie.liked}</h6>
+              </div>
 
               <EditForm
                 key={selectedMovie.id}
@@ -135,16 +143,16 @@ const List: React.FC = () => {
 
                 </div>
                 <div className="col-md-3 col-lg-4">
-                 <GenericTextInput GI={{
-                    id: 9,
-                    name: "desYear",
-                    label: "Year",
-                    value: `${newItemYear}`,
-                    isValid: false,
-                    validationText: "Indvalid entry",
-                    onChange: (t) => setNewItemYear(parseFloat(t))
-                  }} /> 
-
+                <GenericSelectInput
+                        GSI={{
+                            id:9,
+                            name:"genreSelect",
+                            label:"Genre",
+                            value:`${genre}`,
+                            onChange: (g) => setGenre(g),
+                            option: ["Adventure", "Sci-fi", "Musical", "Romance", "Comedy"]
+                        }}
+                        />
                 </div>
                 <div className="col-12 col-md-2 mt-2">
                   <button className="btn btn-primary" type="submit">
